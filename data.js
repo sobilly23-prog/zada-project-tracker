@@ -79,8 +79,8 @@ const TRACKER_DATA = {
         }
       ],
       weeks: [
-        { num: 1, focus: "Lock the baseline",           state: "done",   days: [{n:28,m:"Apr"},{n:29,m:"Apr"},{n:30,m:"Apr"},{n:1,m:"May"},{n:2,m:"May"},{n:3,m:"May",w:true},{n:4,m:"May",w:true}] },
-        { num: 2, focus: "First flyer drop",            state: "now",    days: [{n:5,m:"May"},{n:6,m:"May"},{n:7,m:"May"},{n:8,m:"May"},{n:9,m:"May"},{n:10,m:"May",w:true},{n:11,m:"May",w:true}] },
+        { num: 1, focus: "Lock the baseline",           state: "now",    days: [{n:28,m:"Apr"},{n:29,m:"Apr"},{n:30,m:"Apr"},{n:1,m:"May"},{n:2,m:"May"},{n:3,m:"May",w:true},{n:4,m:"May",w:true}] },
+        { num: 2, focus: "First flyer drop",            state: "future", days: [{n:5,m:"May"},{n:6,m:"May"},{n:7,m:"May"},{n:8,m:"May"},{n:9,m:"May"},{n:10,m:"May",w:true},{n:11,m:"May",w:true}] },
         { num: 3, focus: "Website CTA goes live",       state: "future", days: [{n:12,m:"May"},{n:13,m:"May"},{n:14,m:"May"},{n:15,m:"May"},{n:16,m:"May"},{n:17,m:"May",w:true},{n:18,m:"May",w:true}] },
         { num: 4, focus: "Mid-round check",             state: "future", days: [{n:19,m:"May"},{n:20,m:"May"},{n:21,m:"May"},{n:22,m:"May"},{n:23,m:"May"},{n:24,m:"May",w:true},{n:25,m:"May",w:true}] },
         { num: 5, focus: "Double down on what's working", state: "future", days: [{n:26,m:"May"},{n:27,m:"May"},{n:28,m:"May"},{n:29,m:"May"},{n:30,m:"May"},{n:31,m:"May",w:true},{n:1,m:"Jun",w:true}] },
