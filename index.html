@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zada Project Tracker</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:          oklch(98% 0.004 240);
+    --surface:     oklch(100% 0 0);
+    --border:      oklch(91% 0.006 240);
+    --border-soft: oklch(95% 0.003 240);
+    --text-1:      oklch(16% 0.005 240);
+    --text-2:      oklch(46% 0.008 240);
+    --text-3:      oklch(64% 0.006 240);
+    --stone:       oklch(52% 0.02 80);
+    --stone-light: oklch(94% 0.018 80);
+    --stone-mid:   oklch(76% 0.015 80);
+    --amber:       oklch(52% 0.14 68);
+    --amber-light: oklch(96% 0.055 80);
+    --green:       oklch(46% 0.14 155);
+    --green-light: oklch(95% 0.05 155);
+    --slate:       oklch(42% 0.012 240);
+    --slate-light: oklch(93% 0.006 240);
+    --slate-mid:   oklch(80% 0.008 240);
+  }
+
+  body {
+    background: var(--bg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", sans-serif;
+    color: var(--text-1);
+    min-height: 100vh;
+  }
+
+  .page {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 48px 44px 80px;
+  }
+
+  /* ── Brand bar ── */
+  .brand-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    margin-bottom: 36px;
+    border-bottom: 1px solid var(--border);
+  }
+  .brand-name {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-1);
+  }
+  .round-badge {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: var(--slate-light);
+    color: var(--slate);
+    border: 1px solid var(--slate-mid);
+  }
+
+  /* ── Round header ── */
+  .round-header { margin-bottom: 28px; }
+  .round-meta {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    margin-bottom: 8px;
+  }
+  .round-header h1 {
+    font-size: 40px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--text-1);
+    margin-bottom: 8px;
+  }
+  .round-dates { font-size: 15px; color: var(--text-2); }
+
+  /* ── KPI callout ── */
+  .kpi-callout {
+    margin-bottom: 40px;
+    padding: 22px 26px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .kpi-label-col { flex-shrink: 0; padding-top: 3px; }
+  .kpi-eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--amber);
+    white-space: nowrap;
+  }
+  .kpi-rule {
+    border: none;
+    border-top: 2px solid var(--amber);
+    margin-top: 6px;
+    width: 32px;
+  }
+  .kpi-body { font-size: 17px; font-weight: 500; color: var(--text-1); line-height: 1.5; }
+  .kpi-body strong { font-weight: 800; }
+  .kpi-sub { margin-top: 5px; font-size: 13px; color: var(--text-3); line-height: 1.4; }
+
+  /* ── Section label ── */
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    margin-bottom: 10px;
+  }
+  .th-hint {
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--text-3);
+    opacity: 0.7;
+  }
+
+  /* ── Bets table ── */
+  .bets-table {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 36px;
+  }
+  .bets-table-head {
+    display: grid;
+    grid-template-columns: 1fr 130px 108px;
+    gap: 16px;
+    padding: 11px 22px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+  .th {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-3);
+  }
+  .th.right { text-align: right; }
+
+  /* ── Channel headers ── */
+  .channel-header-row {
+    padding: 16px 22px 12px;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border-soft);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .channel-section:first-child .channel-header-row { border-top: none; }
+  .ch-name {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--text-1);
+    flex-shrink: 0;
+  }
+  .ch-divider {
+    width: 1px;
+    height: 20px;
+    background: var(--border);
+    flex-shrink: 0;
+  }
+  .ch-meta { display: flex; flex-direction: column; gap: 2px; }
+  .ch-tagline { font-size: 13px; font-weight: 600; color: var(--text-2); line-height: 1.2; }
+  .ch-desc { font-size: 12px; color: var(--text-3); line-height: 1.3; }
+
+  /* ── Bet rows ── */
+  .bet-row {
+    padding: 12px 22px 11px;
+    border-bottom: 1px solid var(--border-soft);
+    transition: background 0.1s;
+  }
+  .bet-row:last-child { border-bottom: none; }
+  .bet-row:hover { background: oklch(99% 0.002 240); }
+  .bet-main {
+    display: grid;
+    grid-template-columns: 1fr 130px 108px;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 4px;
+  }
+  .bet-title { font-size: 15px; font-weight: 600; color: var(--text-1); line-height: 1.35; }
+  .owner-label { font-size: 13px; color: var(--text-2); font-weight: 500; padding-top: 3px; }
+  .bet-sub { font-size: 13px; color: var(--text-3); line-height: 1.5; padding-right: 48px; }
+  .bet-note {
+    margin-top: 10px;
+    font-size: 12px;
+    background: var(--bg);
+    color: var(--text-2);
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    border-radius: 7px;
+    line-height: 1.6;
+  }
+  .bet-note strong { font-weight: 700; }
+
+  /* Empty channel placeholder */
+  .empty-bets { background: var(--bg); }
+  .empty-msg {
+    font-size: 13px;
+    color: var(--text-3);
+    font-style: italic;
+    padding: 4px 0;
+  }
+
+  /* ── Status pills ── */
+  .status-pill {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 11px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: inherit;
+    transition: opacity 0.1s, transform 0.1s;
+  }
+  .status-pill:hover { opacity: 0.8; transform: scale(0.97); }
+  .status-pill:active { transform: scale(0.94); }
+  .s-active      { background: var(--green-light); color: var(--green); border: 1px solid oklch(82% 0.08 155); }
+  .s-risk        { background: var(--amber-light); color: var(--amber); border: 1px solid oklch(85% 0.08 75); }
+  .s-open        { background: transparent; color: var(--text-3); border: 1px solid var(--border); opacity: 0.7; }
+  .s-done        { background: var(--green-light); color: var(--green); border: 1px solid oklch(82% 0.08 155); }
+  .status-dot    { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; background: currentColor; }
+
+  /* ── Calendar ── */
+  .calendar-section { margin-bottom: 36px; }
+  .cal-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .cal-head {
+    display: grid;
+    grid-template-columns: 88px repeat(7, 1fr) 196px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+  .cal-th {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    padding: 10px 0;
+    text-align: center;
+  }
+  .cal-th.left  { text-align: left; padding-left: 14px; }
+  .cal-th.right { text-align: left; padding-left: 14px; }
+  .cal-row {
+    display: grid;
+    grid-template-columns: 88px repeat(7, 1fr) 196px;
+    border-bottom: 1px solid var(--border-soft);
+    min-height: 56px;
+    align-items: center;
+  }
+  .cal-row:last-child { border-bottom: none; }
+  .cal-row.done   { opacity: 0.45; }
+  .cal-row.now    { background: var(--stone-light); border-top: 1.5px solid var(--stone-mid); border-bottom: 1.5px solid var(--stone-mid); opacity: 1; }
+  .week-num-cell  { padding: 0 14px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3); }
+  .cal-row.now .week-num-cell { color: var(--stone); }
+  .day-cell       { padding: 10px 4px; text-align: center; border-left: 1px solid var(--border-soft); }
+  .cal-row.now .day-cell { border-left-color: var(--stone-mid); }
+  .day-num        { font-size: 14px; font-weight: 700; line-height: 1; color: var(--text-1); }
+  .day-mo         { font-size: 9px; font-weight: 600; letter-spacing: 0.04em; color: var(--text-3); margin-top: 3px; }
+  .cal-row.now .day-num   { font-weight: 800; }
+  .day-cell.weekend .day-num { color: var(--text-3); }
+  .focus-cell     { padding: 12px 16px; border-left: 1px solid var(--border-soft); }
+  .cal-row.now .focus-cell { border-left-color: var(--stone-mid); }
+  .focus-text     { font-size: 13px; font-weight: 600; color: var(--text-1); line-height: 1.3; }
+  .focus-tag      { margin-top: 4px; font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--stone); }
+
+  /* ── Roadmap ── */
+  .roadmap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 24px 22px;
+  }
+  .roadmap-track {
+    display: grid;
+    grid-template-columns: 1fr 32px 1fr 32px 1fr;
+    align-items: center;
+    margin-top: 16px;
+  }
+  .r-step {
+    padding: 18px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.15s;
+  }
+  .r-step:hover { opacity: 0.85; transform: translateY(-1px); }
+  .r-step.current { background: var(--green-light); border: 1.5px solid oklch(82% 0.08 155); }
+  .r-step.future  { background: var(--bg); border: 1px solid var(--border); }
+  .r-tag {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--green);
+    color: white;
+    padding: 2px 7px;
+    border-radius: 3px;
+    margin-bottom: 8px;
+  }
+  .r-num  { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 5px; }
+  .r-step.current .r-num { color: var(--green); }
+  .r-step.future  .r-num { color: var(--text-3); }
+  .r-goal  { font-size: 14px; font-weight: 700; color: var(--text-1); line-height: 1.3; margin-bottom: 5px; }
+  .r-dates { font-size: 12px; color: var(--text-3); }
+  .r-arrow { text-align: center; font-size: 18px; color: var(--border); }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="brand-bar">
+    <div class="brand-name">Port Moody Multiplex</div>
+    <div class="round-badge" id="round-badge">Round 1 of 3</div>
+  </div>
+
+  <div class="kpi-callout">
+    <div class="kpi-label-col">
+      <div class="kpi-eyebrow">One KPI</div>
+      <hr class="kpi-rule">
+    </div>
+    <div>
+      <div class="kpi-body" id="kpi-body"></div>
+      <div class="kpi-sub" id="kpi-sub"></div>
+    </div>
+  </div>
+
+  <div id="round-content"></div>
+  <div id="roadmap-section"></div>
+
+</div>
+<script src="data.js"></script>
+<script src="tracker.js"></script>
+</body>
+</html>
